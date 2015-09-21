@@ -1,0 +1,13 @@
+@(repository: gitbucket.core.service.RepositoryService.RepositoryInfo,
+  persons: Seq[((String, String), Seq[org.eclipse.jgit.lib.PersonIdent])])(implicit context: gitbucket.core.controller.Context)
+@import context._
+@import gitbucket.core.view.helpers._
+@gitbucket.core.html.main("Commit Graphs", Some(repository)){
+  @gitbucket.core.html.menu("graphs", repository){
+    hoge
+    @for(p <- persons) {
+      @user(p._1._2, p._1._1, "username")
+      <span>@p._2.length</span>
+    }
+  }
+}
