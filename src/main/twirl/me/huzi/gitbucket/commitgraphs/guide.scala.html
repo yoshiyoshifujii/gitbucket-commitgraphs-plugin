@@ -1,0 +1,9 @@
+@(repository: gitbucket.core.service.RepositoryService.RepositoryInfo)(implicit context: gitbucket.core.controller.Context)
+@import context._
+@import gitbucket.core.view.helpers._
+@gitbucket.core.html.main("Commit Graphs", Some(repository)) {
+  @gitbucket.core.html.menu("graphs", repository){
+    <h3>This is an empty repository</h3>
+  }
+}
+

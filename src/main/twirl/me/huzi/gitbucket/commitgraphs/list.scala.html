@@ -1,13 +1,56 @@
 @(repository: gitbucket.core.service.RepositoryService.RepositoryInfo,
-  persons: Seq[((String, String), Seq[org.eclipse.jgit.lib.PersonIdent])])(implicit context: gitbucket.core.controller.Context)
+  commitGraphs: Seq[me.huzi.gitbucket.commitgraphs.controller.CommitGraph])(implicit context: gitbucket.core.controller.Context)
 @import context._
 @import gitbucket.core.view.helpers._
 @gitbucket.core.html.main("Commit Graphs", Some(repository)){
   @gitbucket.core.html.menu("graphs", repository){
-    hoge
-    @for(p <- persons) {
-      @user(p._1._2, p._1._1, "username")
-      <span>@p._2.length</span>
+
+    <script src="https://www.google.com/jsapi"></script>
+    <script> google.load("visualization", "1", {packages:["corechart"]}); </script>
+
+    <div class="row-fluid">
+    @commitGraphs.zipWithIndex.map { case (cg, i) =>
+      <div class="span6">
+        <div class="box-header">
+          <div>
+            @avatar(cg.userName, 20)
+            @user(cg.userName, cg.mailAddress, "username")
+          </div>
+          <div>
+            <small><span class="muted">@cg.commits commits</span> / <span style="color: #6cc644;">@cg.additions ++</span> / <span style="color: #bd2c00;">@cg.deletions --</span></small>
+          </div>
+        </div>
+        <div class="box-content-bottom">
+          <div id="chart_div_@cg.userName" style="height: 300px;"></div>
+        </div>
+      </div><!-- /.span6 -->
+      <script>
+        google.setOnLoadCallback(function() {
+          var data = google.visualization.arrayToDataTable([
+            ['Date', 'Commits'],
+            @cg.dailys.map { d =>
+            ['@date(d.date)',  @d.commits],
+            }
+            ['', 0]
+          ]);
+
+          var options = {
+            legend: {position: "none"},
+            vAxis: {minValue: 0}
+          };
+
+          var chart = new google.visualization.AreaChart(document.getElementById('chart_div_@cg.userName'));
+          chart.draw(data, options);
+        });
+      </script>
+
+      @if(((i+1) % 2) == 0) {
+    </div><!-- /.row-fluid -->
+    <div class="row-fluid">
+      }
     }
+    </div><!-- /.row-fluid -->
+
+
   }
 }
