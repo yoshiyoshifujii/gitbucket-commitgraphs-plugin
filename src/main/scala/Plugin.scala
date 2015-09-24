@@ -24,7 +24,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     // Add Snippet link to the header
     val path = settings.baseUrl.getOrElse(context.getContextPath)
     Seq(
-      "/[^/]*?/[^/]*?" -> s"""
+      ".*/(?!graphs)[^/]*" -> s"""
         |$$('ul.sidemenu .menu-icon.octicon-book').parents('ul.sidemenu').map(function(i) {
         |  var owner = $$("input[type=hidden][name=owner]").val();
         |  var repository = $$("input[type=hidden][name=repository]").val();
@@ -46,21 +46,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
         |  s.append(lc);
         |});
       """.stripMargin,
-      "/[^/]*?/[^/]*?/(?!graphs).*" -> s"""
-        |$$('ul.sidemenu .menu-icon.octicon-book').parents('ul.sidemenu').map(function(i) {
-        |  var owner = $$("input[type=hidden][name=owner]").val();
-        |  var repository = $$("input[type=hidden][name=repository]").val();
-        |  var s = $$(this);
-        |  var lc = s.children(':last').remove().clone();
-        |  s.append(
-        |    $$('<li data-toggle="tooltip" data-placement="left" data-original-title="Commit Graphs"></li>').append(
-        |      $$('<a href=""><i class="menu-icon octicon octicon-graph"></i></a>').attr('href', '${path}/' + owner + '/' + repository + '/graphs')
-        |    )
-        |  );
-        |  s.append(lc);
-        |});
-      """.stripMargin,
-            "/[^/]*?/[^/]*?/graphs" -> s"""
+      ".*/graphs" -> s"""
         |$$('ul.sidemenu .menu-icon.octicon-book').parents('ul.sidemenu').map(function(i) {
         |  var owner = $$("input[type=hidden][name=owner]").val();
         |  var repository = $$("input[type=hidden][name=repository]").val();
