@@ -13,7 +13,7 @@
       <div class="span6">
         <div class="box-header">
           <div>
-            @avatar(cg.userName, 20)
+            @avatar(cg.userName, 20, mailAddress = cg.mailAddress)
             @user(cg.userName, cg.mailAddress, "username")
           </div>
           <div>
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="box-content-bottom">
-          <div id="chart_div_@cg.userName" style="height: 300px;"></div>
+          <div id="chart_div_@i" style="height: 300px;"></div>
         </div>
       </div><!-- /.span6 -->
       <script>
@@ -39,7 +39,7 @@
             vAxis: {minValue: 0}
           };
 
-          var chart = new google.visualization.AreaChart(document.getElementById('chart_div_@cg.userName'));
+          var chart = new google.visualization.AreaChart(document.getElementById('chart_div_@i'));
           chart.draw(data, options);
         });
       </script>

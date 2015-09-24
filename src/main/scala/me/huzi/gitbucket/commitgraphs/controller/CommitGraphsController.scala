@@ -10,6 +10,7 @@ import gitbucket.core.util._
 import gitbucket.core.util.ControlUtil._
 import gitbucket.core.util.Directory._
 import gitbucket.core.util.Implicits._
+import gitbucket.core.util.JGitUtil._
 import me.huzi.gitbucket.commitgraphs.html
 
 class CommitGraphsController extends CommitGraphsControllerBase
@@ -33,24 +34,24 @@ trait CommitGraphsControllerBase extends ControllerBase {
               case _    => i
             }
           }
-          DailyCount(
-            userName = rev.getAuthorIdent.getName,
-            mailAddress = rev.getAuthorIdent.getEmailAddress,
-            date = rev.getAuthorIdent.getWhen,
-            commits = 1,
+          CommitCount(
+            commit = new CommitInfo(rev),
             additions = additions,
             deletions = deletions)
-        }.toSeq.groupBy(x => x.mailAddress).toSeq.sortWith((lt1, lt2) => lt1._2.lengthCompare(lt2._2.length) > 0).map {
-          case (m, ds) =>
-            val dailys = ds.groupBy(x => date2DateStr(x.date)).map {
+        }.toSeq.groupBy { x =>
+          if (x.commit.isDifferentFromAuthor) (x.commit.committerName, x.commit.committerEmailAddress)
+          else (x.commit.authorName, x.commit.authorEmailAddress)
+        }.toSeq.sortWith((lt1, lt2) => lt1._2.lengthCompare(lt2._2.length) > 0).map {
+          case ((userName, mailAddress), ds) =>
+            val dailys = ds.groupBy(x => date2DateStr(x.commit.authorTime)).map {
               case (date, ds) =>
                 val (additions, deletions) = ds.foldLeft((0L, 0L)) { (i, d) =>
                   (i._1 + d.additions, i._2 + d.deletions)
                 }
                 val dh = ds.head
                 DailyCount(
-                  userName = dh.userName,
-                  mailAddress = dh.mailAddress,
+                  userName = dh.commit.authorName,
+                  mailAddress = dh.commit.authorEmailAddress,
                   date = dateStr2Date(date),
                   commits = ds.length,
                   additions = additions,
@@ -61,8 +62,8 @@ trait CommitGraphsControllerBase extends ControllerBase {
               (i._1 + d.additions, i._2 + d.deletions)
             }
             CommitGraph(
-              userName = dailys.head.userName,
-              mailAddress = m,
+              userName = userName,
+              mailAddress = mailAddress,
               commits = ds.length,
               additions = additions,
               deletions = deletions,
@@ -77,6 +78,11 @@ trait CommitGraphsControllerBase extends ControllerBase {
   private def date2DateStr(date: java.util.Date): String = new java.text.SimpleDateFormat("yyyy-MM-dd").format(date)
   private def dateStr2Date(date: String): java.util.Date = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(date)
 }
+
+case class CommitCount(
+  commit: CommitInfo,
+  additions: Long,
+  deletions: Long)
 
 case class DailyCount(
   userName: String,
