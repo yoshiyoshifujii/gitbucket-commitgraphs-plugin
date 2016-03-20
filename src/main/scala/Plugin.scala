@@ -14,6 +14,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
   override val description: String = "Viewing the commit count in the graph."
 
   override val versions: Seq[Version] = Seq(
+    Version(3, 12),
     Version(1, 0))
 
   override val controllers = Seq(
@@ -25,36 +26,28 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     val path = settings.baseUrl.getOrElse(context.getContextPath)
     Seq(
       ".*/(?!graphs)[^/]*" -> s"""
-        |$$('ul.sidemenu .menu-icon.octicon-book').parents('ul.sidemenu').map(function(i) {
-        |  var owner = $$("input[type=hidden][name=owner]").val();
-        |  var repository = $$("input[type=hidden][name=repository]").val();
-        |  var s = $$(this);
-        |  var lc = s.children(':last').remove().clone();
-        |  if($$("li[data-toggle=tooltip] i.menu-icon.octicon-book", s).length === 0) {
-        |    s.append(
-        |      $$('<li>').append(
-        |        $$('<a><i class="menu-icon octicon octicon-graph"></i> Commit Graphs</a></li>').attr('href', '${path}/' + owner + '/' + repository + '/graphs')
-        |      )
-        |    );
-        |  } else {
-        |    s.append(
-        |      $$('<li data-toggle="tooltip" data-placement="left" data-original-title="Commit Graphs"></li>').append(
-        |        $$('<a href=""><i class="menu-icon octicon octicon-graph"></i></a>').attr('href', '${path}/' + owner + '/' + repository + '/graphs')
-        |      )
-        |    );
-        |  }
-        |  s.append(lc);
-        |});
-      """.stripMargin,
-      ".*/graphs" -> s"""
-        |$$('ul.sidemenu .menu-icon.octicon-book').parents('ul.sidemenu').map(function(i) {
+        |$$('ul.headmenu').map(function(i) {
         |  var owner = $$("input[type=hidden][name=owner]").val();
         |  var repository = $$("input[type=hidden][name=repository]").val();
         |  var s = $$(this);
         |  var lc = s.children(':last').remove().clone();
         |  s.append(
-        |    $$('<li class="active" data-toggle="tooltip" data-placement="left" data-original-title="Commit Graphs"></li>').append(
-        |      $$('<a href=""><i class="menu-icon menu-icon-active octicon octicon-graph"></i></a>').attr('href', '${path}/' + owner + '/' + repository + '/graphs')
+        |    $$('<li></li>').append(
+        |      $$('<a><i class="menu-icon octicon octicon-graph"></i> Commit Graphs</a>').attr('href', '${path}/' + owner + '/' + repository + '/graphs')
+        |    )
+        |  );
+        |  s.append(lc);
+        |});
+      """.stripMargin,
+      ".*/graphs" -> s"""
+        |$$('ul.headmenu').map(function(i) {
+        |  var owner = $$("input[type=hidden][name=owner]").val();
+        |  var repository = $$("input[type=hidden][name=repository]").val();
+        |  var s = $$(this);
+        |  var lc = s.children(':last').remove().clone();
+        |  s.append(
+        |    $$('<li class="active"></li>').append(
+        |      $$('<a><i class="menu-icon menu-icon-active octicon octicon-graph"></i> Commit Graphs</a>').attr('href', '${path}/' + owner + '/' + repository + '/graphs')
         |    )
         |  );
         |  s.append(lc);

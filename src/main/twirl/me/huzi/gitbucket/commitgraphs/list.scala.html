@@ -10,7 +10,7 @@
 
     <div class="row-fluid">
     @commitGraphs.zipWithIndex.map { case (cg, i) =>
-      <div class="span6">
+      <div class="col-md-6">
         <div class="box-header">
           <div>
             @avatar(cg.userName, 20, mailAddress = cg.mailAddress)
@@ -23,7 +23,7 @@
         <div class="box-content-bottom">
           <div id="chart_div_@i" style="height: 300px;"></div>
         </div>
-      </div><!-- /.span6 -->
+      </div><!-- /.col-md-6 -->
       <script>
         google.setOnLoadCallback(function() {
           var data = google.visualization.arrayToDataTable([
