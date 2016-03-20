@@ -15,6 +15,10 @@ It will viewing the graphs.
 
 ## Release Notes
 
+### 3.12.0
+
+- Update to GitBucket 3.12.0
+
 ### 1.0
 
 - introduce gitbucket-commitgraphs-plugin
