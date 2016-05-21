@@ -15,6 +15,10 @@ It will viewing the graphs.
 
 ## Release Notes
 
+### 4.0.0
+
+- Update to GitBucket 4.0.0
+
 ### 3.12.0
 
 - Update to GitBucket 3.12.0
