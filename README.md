@@ -1,6 +1,6 @@
 # gitbucket-commitgraphs-plugin
 
-This plugin enhances [takezoe/gitbucket](https://github.com/takezoe/gitbucket) by providing an viewing commit graphs.
+This plugin enhances [gitbucket/gitbucket](https://github.com/gitbucket/gitbucket) by providing an viewing commit graphs.
 
 ## Features
 
