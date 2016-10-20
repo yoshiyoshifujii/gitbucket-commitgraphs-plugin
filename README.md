@@ -13,16 +13,3 @@ It will viewing the graphs.
 - Copy target/scala-2.11/gitbucket-commitgraphs-plugin-plugin_2.11-x.x.jar into GITBUCKET_HOME/plugins
 - Restart GitBucket
 
-## Release Notes
-
-### 4.0.0
-
-- Update to GitBucket 4.0.0
-
-### 3.12.0
-
-- Update to GitBucket 3.12.0
-
-### 1.0
-
-- introduce gitbucket-commitgraphs-plugin
