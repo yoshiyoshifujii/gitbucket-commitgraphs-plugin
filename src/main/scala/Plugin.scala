@@ -12,9 +12,10 @@ class Plugin extends gitbucket.core.plugin.Plugin {
   override val description: String = "Viewing the commit count in the graph."
 
   override val versions: Seq[Version] = Seq(
-    new Version("4.0.0"),
+    new Version("1.0"),
     new Version("3.12"),
-    new Version("1.0"))
+    new Version("4.0.0"),
+    new Version("4.5.0"))
 
   override val controllers = Seq(
     "/*" -> new CommitGraphsController
