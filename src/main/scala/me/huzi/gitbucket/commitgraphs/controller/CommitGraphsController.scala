@@ -21,15 +21,15 @@ trait CommitGraphsControllerBase extends ControllerBase {
   self: RepositoryService with AccountService with ReferrerAuthenticator =>
 
   get("/:owner/:repository/graphs")(referrersOnly { repository =>
-    if (repository.commitCount == 0) {
-      html.guide(repository)
-    } else {
-      using(Git.open(getRepositoryDir(repository.owner, repository.name))) { git =>
+    using(Git.open(getRepositoryDir(repository.owner, repository.name))) { git =>
+      if (JGitUtil.isEmpty(git)) {
+        html.guide(repository)
+      } else {
         val commitGraphs = git.log.all.call.iterator.asScala.map { rev =>
           val p = Process.apply(Seq("git", "log", "-n", "1", "--numstat", """--pretty="%H"""", "--source", rev.getId.name), git.getRepository.getDirectory)
           val (additions, deletions) = p.lineStream_!.filter(_.split("\t").length == 3).foldLeft((0, 0)) { (i, l) =>
             val Array(a, d, filename) = l.split("\t")
-            (a.forall(_.isDigit) && d.forall(_.isDigit)) match {
+            a.forall(_.isDigit) && d.forall(_.isDigit) match {
               case true => (i._1 + a.toInt, i._2 + d.toInt)
               case _    => i
             }
@@ -68,7 +68,7 @@ trait CommitGraphsControllerBase extends ControllerBase {
               additions = additions,
               deletions = deletions,
               dailys = dailys)
-        }.toSeq
+        }
 
         html.list(repository, commitGraphs)
       }
