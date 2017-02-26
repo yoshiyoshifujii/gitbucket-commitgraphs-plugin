@@ -16,7 +16,8 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     new Version("3.12"),
     new Version("4.0.0"),
     new Version("4.5.0"),
-    new Version("4.9.0"))
+    new Version("4.9.0"),
+    new Version("4.10.0"))
 
   override val controllers = Seq(
     "/*" -> new CommitGraphsController
