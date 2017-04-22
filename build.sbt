@@ -1,6 +1,6 @@
 val Organization = "me.huzi.gitbucket"
 val ProjectName = "gitbucket-commitgraphs-plugin"
-val ProjectVersion = "4.10.0"
+val ProjectVersion = "4.11.0"
 
 lazy val root = (project in file(".")).enablePlugins(SbtTwirl)
 
