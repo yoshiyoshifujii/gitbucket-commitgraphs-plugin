@@ -1,0 +1,29 @@
+@(commitGraphsGitCommand: String, info: Option[Any])(implicit context: gitbucket.core.controller.Context)
+@import context._
+@import gitbucket.core.html.main
+@import gitbucket.core.admin.html.menu
+@import gitbucket.core.helper.html.information
+@import gitbucket.core.view.helpers._
+@import gitbucket.core.util.Directory._
+@main("Commit Graph"){
+@menu("Commit Graph"){
+@information(info)
+<form action="@path/admin/commitgraphs" method="POST" validate="true">
+    <div class="panel panel-default">
+        <div class="panel-heading strong">Commit Graph Settings</div>
+        <div class="panel-body">
+            <fieldset>
+                <label><span class="strong">Git Command</span></label>
+                <input type="text" style="width: 635px;" name="commitGraphsGitCommand" value="@commitGraphsGitCommand"/>
+                <p class="muted">e.g. git, /usr/bin/git, c:/cygwin/bin/git.exe</p>
+            </fieldset>
+        </div>
+    </div>
+    <fieldset>
+        <input type="hidden" name="action" id="action" value="apply"/>
+        <input type="submit" class="btn btn-success" value="Apply changes"/>
+        <input type="submit" class="btn" value="Check git command" onClick="$('#action').val('check')"/>
+    </fieldset>
+</form>
+}
+}

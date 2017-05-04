@@ -18,7 +18,8 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     new Version("4.5.0"),
     new Version("4.9.0"),
     new Version("4.10.0"),
-    new Version("4.11.0")
+    new Version("4.11.0"),
+    new Version("4.12.0")
   )
 
   override val controllers = Seq(
@@ -28,11 +29,15 @@ class Plugin extends gitbucket.core.plugin.Plugin {
   override val repositoryMenus = Seq(
     (repository: RepositoryInfo, context: Context) =>
       Some(Link(
-        id = "CommitGraphs",
-        label = "Commit Graphs",
-        path = s"/graphs",
+        id = pluginId,
+        label = pluginName,
+        path = s"/commitgraphs",
         icon = Some("menu-icon octicon octicon-graph")
       ))
+  )
+
+  override val systemSettingMenus: Seq[(Context) => Option[Link]] = Seq(
+    (ctx: Context) => Some(Link("Commit Graph","Commit Graph","admin/commitgraphs"))
   )
 
 }
