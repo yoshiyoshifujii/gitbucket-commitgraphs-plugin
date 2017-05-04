@@ -4,13 +4,11 @@ import scala.collection.JavaConverters._
 import scala.sys.process._
 import org.eclipse.jgit.api.Git
 import gitbucket.core.controller._
-import gitbucket.core.model._
 import gitbucket.core.service._
 import gitbucket.core.util._
 import gitbucket.core.util.AdminAuthenticator
 import gitbucket.core.util.SyntaxSugars._
 import gitbucket.core.util.Directory._
-import gitbucket.core.util.Implicits._
 import gitbucket.core.util.JGitUtil._
 import io.github.gitbucket.scalatra.forms._
 import me.huzi.gitbucket.commitgraphs.service.CommitGraphsSettingsService
@@ -31,9 +29,9 @@ trait CommitGraphsControllerBase extends ControllerBase {
   )(CommitGraphsSettings.apply)
 
   get("/admin/commitgraphs")(adminOnly {
-      val settings = loadCommitGraphsSettings()
-      html.settings(settings.CommitGraphsGitCommand, None)
-    }
+    val settings = loadCommitGraphsSettings()
+    html.settings(settings.CommitGraphsGitCommand, None)
+  }
   )
 
   post("/admin/commitgraphs", settingsForm)(adminOnly { form =>
@@ -61,14 +59,15 @@ trait CommitGraphsControllerBase extends ControllerBase {
           val commitGraphs = git.log.all.call.iterator.asScala.map { rev =>
             val p = Process.apply(
               Seq(loadCommitGraphsSettings().CommitGraphsGitCommand, "log", "-n", "1",
-                "--numstat", """--pretty="%H"""", "--source", rev.getId.name), 
+                "--numstat", """--pretty="%H"""", "--source", rev.getId.name),
               git.getRepository.getDirectory)
-            val (additions, deletions) = 
+            val (additions, deletions) =
               p.lineStream_!.filter(_.split("\t").length == 3).foldLeft((0, 0)) { (i, l) =>
                 val Array(a, d, filename) = l.split("\t")
-                a.forall(_.isDigit) && d.forall(_.isDigit) match {
-                  case true => (i._1 + a.toInt, i._2 + d.toInt)
-                  case _    => i
+                if (a.forall(_.isDigit) && d.forall(_.isDigit)) {
+                  (i._1 + a.toInt, i._2 + d.toInt)
+                } else {
+                  i
                 }
               }
             CommitCount(
@@ -116,7 +115,7 @@ trait CommitGraphsControllerBase extends ControllerBase {
   })
 
   private def checkGitCommand(command: String): Boolean = {
-    try{ 
+    try{
       val processBuilder = Process.apply(command)
       if( processBuilder.!(ProcessLogger(line => ())) == 1 ) true else false
     } catch {
