@@ -10,7 +10,7 @@ import gitbucket.core.util.AdminAuthenticator
 import gitbucket.core.util.SyntaxSugars._
 import gitbucket.core.util.Directory._
 import gitbucket.core.util.JGitUtil._
-import io.github.gitbucket.scalatra.forms._
+import org.scalatra.forms._
 import me.huzi.gitbucket.commitgraphs.service.CommitGraphsSettingsService
 import me.huzi.gitbucket.commitgraphs.service.CommitGraphsSettingsService._
 import me.huzi.gitbucket.commitgraphs.html

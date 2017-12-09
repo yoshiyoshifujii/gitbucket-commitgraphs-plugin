@@ -7,10 +7,10 @@ lazy val root = (project in file(".")).enablePlugins(SbtTwirl)
 organization := Organization
 name := ProjectName
 version := ProjectVersion
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.4"
 
 libraryDependencies ++= Seq(
-  "io.github.gitbucket" %% "gitbucket"          % "4.12.1" % "provided",
+  "io.github.gitbucket" %% "gitbucket"          % "4.19.0"  % "provided",
   "com.typesafe.play"   %% "twirl-compiler"     % "1.3.0"  % "provided",
   "javax.servlet"        % "javax.servlet-api"  % "3.1.0"  % "provided"
 )
