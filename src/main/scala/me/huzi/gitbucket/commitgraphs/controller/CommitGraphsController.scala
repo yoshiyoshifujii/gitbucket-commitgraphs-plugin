@@ -75,16 +75,16 @@ trait CommitGraphsControllerBase extends ControllerBase {
               additions = additions,
               deletions = deletions)
           }.toSeq.groupBy { x =>
-            if (x.commit.isDifferentFromAuthor) (x.commit.committerName, x.commit.committerEmailAddress)
-            else (x.commit.authorName, x.commit.authorEmailAddress)
+            if (x.commit.isDifferentFromAuthor) x.commit.committerEmailAddress
+            else x.commit.authorEmailAddress
           }.toSeq.sortWith((lt1, lt2) => lt1._2.lengthCompare(lt2._2.length) > 0).map {
-            case ((userName, mailAddress), ds) =>
+            case (mailAddress, ds) =>
+              val dh = ds.head
               val dailys = ds.groupBy(x => date2DateStr(x.commit.authorTime)).map {
                 case (date, ds) =>
                   val (additions, deletions) = ds.foldLeft((0L, 0L)) { (i, d) =>
                     (i._1 + d.additions, i._2 + d.deletions)
                   }
-                  val dh = ds.head
                   DailyCount(
                     userName = dh.commit.authorName,
                     mailAddress = dh.commit.authorEmailAddress,
@@ -98,7 +98,7 @@ trait CommitGraphsControllerBase extends ControllerBase {
                 (i._1 + d.additions, i._2 + d.deletions)
               }
               CommitGraph(
-                userName = userName,
+                userName = dh.commit.authorName,
                 mailAddress = mailAddress,
                 commits = ds.length,
                 additions = additions,
