@@ -26,12 +26,13 @@
       </div><!-- /.col-md-6 -->
       <script>
         google.setOnLoadCallback(function() {
-          var data = google.visualization.arrayToDataTable([
-            ['Date', 'Commits'],
+          var data = new google.visualization.DataTable();
+          data.addColumn('date',"Date");
+          data.addColumn('number',"Commits");
+          data.addRows([
             @cg.dailys.map { d =>
-            ['@date(d.date)',  @d.commits],
+              @{"[new Date(%4d,%2d,%2d,0,0,0),  %d],".format(d.date.getYear()+1900,d.date.getMonth(),d.date.getDate(),d.commits)}
             }
-            ['', 0]
           ]);
 
           var options = {
