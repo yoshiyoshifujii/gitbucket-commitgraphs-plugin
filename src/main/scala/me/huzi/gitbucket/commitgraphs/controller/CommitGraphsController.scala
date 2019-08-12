@@ -1,7 +1,8 @@
 package me.huzi.gitbucket.commitgraphs.controller
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.sys.process._
+import scala.util.Using
 import org.eclipse.jgit.api.Git
 import gitbucket.core.controller._
 import gitbucket.core.service._
@@ -51,7 +52,7 @@ trait CommitGraphsControllerBase extends ControllerBase {
   })
 
   get("/:owner/:repository/commitgraphs")(referrersOnly { repository =>
-    using(Git.open(getRepositoryDir(repository.owner, repository.name))) { git =>
+    Using.resource(Git.open(getRepositoryDir(repository.owner, repository.name))) { git =>
       if (JGitUtil.isEmpty(git)) {
         html.guide(repository)
       } else {
@@ -62,7 +63,7 @@ trait CommitGraphsControllerBase extends ControllerBase {
                 "--numstat", """--pretty="%H"""", "--source", rev.getId.name),
               git.getRepository.getDirectory)
             val (additions, deletions) =
-              p.lineStream_!.filter(_.split("\t").length == 3).foldLeft((0, 0)) { (i, l) =>
+              p.lazyLines_!.filter(_.split("\t").length == 3).foldLeft((0, 0)) { (i, l) =>
                 val Array(a, d, filename) = l.split("\t")
                 if (a.forall(_.isDigit) && d.forall(_.isDigit)) {
                   (i._1 + a.toInt, i._2 + d.toInt)
