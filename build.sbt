@@ -1,19 +1,14 @@
 val Organization = "me.huzi.gitbucket"
 val ProjectName = "gitbucket-commitgraphs-plugin"
-val ProjectVersion = "4.23.1"
+val ProjectVersion = "4.32.0"
 
 lazy val root = (project in file(".")).enablePlugins(SbtTwirl)
 
 organization := Organization
 name := ProjectName
 version := ProjectVersion
-scalaVersion := "2.12.4"
-
-libraryDependencies ++= Seq(
-  "io.github.gitbucket" %% "gitbucket"          % "4.23.1" % "provided",
-  "com.typesafe.play"   %% "twirl-compiler"     % "1.3.0"  % "provided",
-  "javax.servlet"        % "javax.servlet-api"  % "3.1.0"  % "provided"
-)
+scalaVersion := "2.13.0"
+gitbucketVersion := "4.32.0"
 
 scalacOptions := Seq("-deprecation", "-feature", "-language:postfixOps", "-Ydelambdafy:method", "-target:jvm-1.8")
 javacOptions in compile ++= Seq("-target", "8", "-source", "8")

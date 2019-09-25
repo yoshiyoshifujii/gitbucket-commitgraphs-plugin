@@ -1,7 +1,7 @@
 package me.huzi.gitbucket.commitgraphs.service
 
 import java.io.File
-
+import scala.util.Using
 import gitbucket.core.util.Directory._
 import gitbucket.core.util.SyntaxSugars._
 import me.huzi.gitbucket.commitgraphs.service.CommitGraphsSettingsService._
@@ -13,7 +13,7 @@ trait CommitGraphsSettingsService {
   def saveCommitGraphsSettings(settings: CommitGraphsSettings): Unit =
     defining(new java.util.Properties()) { props =>
       props.setProperty(CommitGraphsGitCommand, settings.CommitGraphsGitCommand)
-      using(new java.io.FileOutputStream(CommitGraphsConf)) { out =>
+      Using.resource(new java.io.FileOutputStream(CommitGraphsConf)) { out =>
         props.store(out, null)
       }
     }
@@ -21,7 +21,7 @@ trait CommitGraphsSettingsService {
   def loadCommitGraphsSettings(): CommitGraphsSettings =
     defining(new java.util.Properties()) { props =>
       if (CommitGraphsConf.exists) {
-        using(new java.io.FileInputStream(CommitGraphsConf)) { in =>
+        Using.resource(new java.io.FileInputStream(CommitGraphsConf)) { in =>
           props.load(in)
         }
       }
